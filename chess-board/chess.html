@@ -2,9 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Simple Chess Board</title>
+  <title>Chess Board with Turn Timers</title>
   <style>
-    /* Board Styles */
+    /* Basic page styling */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      color: #333;
+      padding: 20px;
+      position: relative;
+      text-align: center;
+    }
+    /* Back Button */
+    .back-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #007bff;
+      color: #fff;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .back-btn:hover {
+      background: #0056b3;
+    }
+    /* Turn Indicator and Timer */
+    #turnIndicator {
+      font-size: 20px;
+      margin-top: 10px;
+    }
+    #timers {
+      margin: 10px 0 20px;
+      font-size: 20px;
+    }
+    /* Chess Board Styles */
     .board {
       display: grid;
       grid-template-columns: repeat(8, 60px);
@@ -31,26 +65,10 @@
     .selected {
       outline: 3px solid red;
     }
-    #turnIndicator {
+    .footDiv {
       text-align: center;
-      font-size: 20px;
       margin-top: 20px;
-    }
-    /* Back Button Styles */
-    .back-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      background: #007bff;
-      color: #fff;
-      padding: 5px 10px;
-      text-decoration: none;
-      border-radius: 4px;
       font-size: 14px;
-      transition: background 0.3s;
-    }
-    .back-btn:hover {
-      background: #0056b3;
     }
   </style>
 </head>
@@ -61,11 +79,20 @@
   <!-- Turn Indicator -->
   <div id="turnIndicator">White's Turn</div>
   
+  <!-- Timers Display -->
+  <div id="timers">
+    <span id="whiteTimer">10:00</span> &nbsp;vs&nbsp; <span id="blackTimer">10:00</span>
+  </div>
+  
   <!-- Chess Board Container -->
   <div class="board" id="chessBoard"></div>
   
+  <div class="footDiv">
+    <p>Refresh the page to reset the board and timers.</p>
+  </div>
+  
   <script>
-    // 8x8 board array (row 0 = top, row 7 = bottom)
+    // Board state: 8x8 array (row 0 is top - Black's side; row 7 is bottom - White's side)
     let board = [
       ['bR', 'bN', 'bB', 'bQ', 'bK', 'bB', 'bN', 'bR'],
       ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
@@ -77,7 +104,7 @@
       ['wR', 'wN', 'wB', 'wQ', 'wK', 'wB', 'wN', 'wR']
     ];
 
-    // Mapping from piece codes to Unicode symbols.
+    // Mapping of piece codes to Unicode symbols.
     const pieceSymbols = {
       'wK': '♔', 'wQ': '♕', 'wR': '♖', 'wB': '♗', 'wN': '♘', 'wP': '♙',
       'bK': '♚', 'bQ': '♛', 'bR': '♜', 'bB': '♝', 'bN': '♞', 'bP': '♟︎'
@@ -88,6 +115,50 @@
 
     const boardDiv = document.getElementById('chessBoard');
     const turnIndicator = document.getElementById('turnIndicator');
+    const whiteTimerDisplay = document.getElementById('whiteTimer');
+    const blackTimerDisplay = document.getElementById('blackTimer');
+
+    // Timer variables: 10 minutes = 600 seconds each.
+    let whiteTime = 600;
+    let blackTime = 600;
+    let timerInterval = null;
+
+    // Convert seconds to MM:SS format.
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return (minutes < 10 ? '0' + minutes : minutes) + ':' + (secs < 10 ? '0' + secs : secs);
+    }
+
+    // Update timer displays.
+    function updateTimerDisplays() {
+      whiteTimerDisplay.textContent = formatTime(whiteTime);
+      blackTimerDisplay.textContent = formatTime(blackTime);
+    }
+
+    // Start the timer for the active player's turn.
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (currentTurn === 'w') {
+          if (whiteTime > 0) {
+            whiteTime--;
+            updateTimerDisplays();
+          } else {
+            clearInterval(timerInterval);
+            alert("White's time is up!");
+          }
+        } else {
+          if (blackTime > 0) {
+            blackTime--;
+            updateTimerDisplays();
+          } else {
+            clearInterval(timerInterval);
+            alert("Black's time is up!");
+          }
+        }
+      }, 1000);
+    }
 
     // Render the chess board.
     function renderBoard() {
@@ -96,14 +167,14 @@
         for (let c = 0; c < 8; c++) {
           const squareDiv = document.createElement('div');
           squareDiv.classList.add('square');
-          // Color squares alternatingly.
+          // Alternate square colors.
           squareDiv.classList.add((r + c) % 2 === 0 ? 'light' : 'dark');
           squareDiv.dataset.row = r;
           squareDiv.dataset.col = c;
           squareDiv.addEventListener('click', handleSquareClick);
           const piece = board[r][c];
           if (piece) {
-            squareDiv.textContent = pieceSymbols[piece] || '';
+            squareDiv.textContent = pieceSymbols[piece];
           }
           boardDiv.appendChild(squareDiv);
         }
@@ -117,26 +188,30 @@
       const col = parseInt(square.dataset.col);
       const piece = board[row][col];
 
-      // If no piece selected, select if it belongs to the current turn.
       if (!selectedSquare) {
+        // Select piece if it belongs to the current player.
         if (piece && piece[0] === currentTurn) {
           selectedSquare = { row, col, element: square };
           square.classList.add('selected');
         }
       } else {
-        // Move the selected piece to the clicked square (no legal move checks).
+        // Move the selected piece to the clicked square.
         board[row][col] = board[selectedSquare.row][selectedSquare.col];
         board[selectedSquare.row][selectedSquare.col] = '';
         selectedSquare.element.classList.remove('selected');
         selectedSquare = null;
-        // Switch turn.
-        currentTurn = currentTurn === 'w' ? 'b' : 'w';
+        // Switch turn and restart timer.
+        currentTurn = (currentTurn === 'w') ? 'b' : 'w';
         turnIndicator.textContent = currentTurn === 'w' ? "White's Turn" : "Black's Turn";
         renderBoard();
+        startTimer();
       }
     }
 
+    // Initial setup.
     renderBoard();
+    updateTimerDisplays();
+    startTimer();
   </script>
 </body>
 </html>

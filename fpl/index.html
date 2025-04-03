@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Player Counters</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f7f7f7;
+      padding: 40px;
+      position: relative;
+    }
+    /* Back Button Styles */
+    .back-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #007bff;
+      color: #fff;
+      padding: 5px 10px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .back-btn:hover {
+      background: #0056b3;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    .counterGroup {
+      margin-bottom: 30px;
+    }
+    .counterGroup h2 {
+      margin-bottom: 10px;
+      font-size: 1.5em;
+    }
+    .counterDisplay {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: 5px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #resetBtn {
+      background: #d9534f;
+    }
+    #resetBtn:hover {
+      background: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <!-- Back to Projects Button -->
+  <a href="../projects.html" class="back-btn">← Back to Projects</a>
+  
+  <h1>Persistent Counters</h1>
+  
+  <div class="counterGroup">
+    <h2>Palmer + Joao Pedro</h2>
+    <div id="counterDisplay1" class="counterDisplay">0</div>
+    <button id="incrementBtn1">Increment</button>
+  </div>
+  
+  <div class="counterGroup">
+    <h2>Rice + Marmoush</h2>
+    <div id="counterDisplay2" class="counterDisplay">0</div>
+    <button id="incrementBtn2">Increment</button>
+  </div>
+  
+  <button id="resetBtn">Reset Counters</button>
+  
+  <script>
+    // Initialize counters from localStorage or default to 0.
+    let counter1 = parseInt(localStorage.getItem('counter1')) || 0;
+    let counter2 = parseInt(localStorage.getItem('counter2')) || 0;
+    
+    const counterDisplay1 = document.getElementById('counterDisplay1');
+    const counterDisplay2 = document.getElementById('counterDisplay2');
+    const incrementBtn1 = document.getElementById('incrementBtn1');
+    const incrementBtn2 = document.getElementById('incrementBtn2');
+    const resetBtn = document.getElementById('resetBtn');
+    
+    // Function to update the displays and save values.
+    function updateCounters() {
+      counterDisplay1.textContent = counter1;
+      counterDisplay2.textContent = counter2;
+      localStorage.setItem('counter1', counter1);
+      localStorage.setItem('counter2', counter2);
+    }
+    
+    updateCounters();
+    
+    // Event listeners for increment buttons.
+    incrementBtn1.addEventListener('click', () => {
+      counter1++;
+      updateCounters();
+    });
+    
+    incrementBtn2.addEventListener('click', () => {
+      counter2++;
+      updateCounters();
+    });
+    
+    // Event listener for the reset button.
+    resetBtn.addEventListener('click', () => {
+      counter1 = 0;
+      counter2 = 0;
+      updateCounters();
+    });
+  </script>
+</body>
+</html>
