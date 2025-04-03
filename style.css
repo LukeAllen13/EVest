@@ -1,0 +1,117 @@
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  padding: 0;
+}
+.UNC{
+  color: #7BAFD4;
+}
+/* Navbar Styles */
+.navbar {
+  background: #007bff;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 0 10px;
+  transition: color 0.3s ease;
+}
+.navbar a:hover {
+  color: #e2e2e2;
+}
+
+/* Container */
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* Home Page */
+.home-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.home-header h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+.home-bio {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.profile-pic {
+  display: block;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+/* Resume Page */
+.resume-container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-top: 30px;
+  line-height: 1.6;
+}
+
+/* Projects Page */
+.project {
+  background: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.project h2 {
+  margin-bottom: 10px;
+}
+.project p {
+  margin-bottom: 10px;
+}
+.project-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+.project-link:hover {
+  color: #0056b3;
+}
+
+/* Shared Toggle Button */
+.toggle-btn {
+  display: block;
+  width: 220px;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background: #007bff;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.toggle-btn:hover {
+  background: #0056b3;
+  transform: scale(1.02);
+}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Investment Dashboard</title>
+  <!-- Include Chart.js (if needed) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Dashboard script -->
+  <script defer src="script.js"></script>
+  <!-- Link to external stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← Back to Home</a>
+  
+  <h1>Investment Dashboard</h1>
+  <button id="toggle-dashboard" class="toggle-btn">View Dashboard</button>
+  <div id="dashboard-container" style="display: none;">
+    <table>
+      <thead>
+        <tr>
+          <th>Sector</th>
+          <th>Company</th>
+          <th>Live Chart</th>
+        </tr>
+      </thead>
+      <tbody id="stock-table">
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
